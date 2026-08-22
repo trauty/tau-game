@@ -29,37 +29,32 @@ struct rotator_t
 {
     i32_t test;
 };
+
+SMOL_REFLECT() { reflection::component<rotator_t>(ctx, "Rotator").field<&rotator_t::test>("Test Value"); }
+
 struct scaler_t
 {
     i32_t test;
 };
 
-void smol_game_init(smol::world_t* world)
-{
-    smol::reflection::factory<rotator_t>{*world->reflection_ctx}
-        .type("rotator_t"_h)
-        .custom<smol::reflection::editor_prop_t>("Rotator")
-        .func<&smol::reflection::get_component<rotator_t>>("get"_h)
-        .func<&smol::reflection::add_component<rotator_t>>("add"_h)
-        .func<&smol::reflection::remove_component<rotator_t>>("remove"_h)
-        .data<&rotator_t::test>("test"_h)
-        .custom<smol::reflection::editor_prop_t>("Test Value");
+SMOL_REFLECT() { reflection::component<scaler_t>(ctx, "Scaler").field<&scaler_t::test>("Test Value"); }
 
-    smol::reflection::factory<scaler_t>{*world->reflection_ctx}
-        .type("scaler_t"_h)
-        .custom<smol::reflection::editor_prop_t>("Scaler")
-        .func<&smol::reflection::get_component<scaler_t>>("get"_h)
-        .func<&smol::reflection::add_component<scaler_t>>("add"_h)
-        .func<&smol::reflection::remove_component<scaler_t>>("remove"_h)
-        .data<&scaler_t::test>("test"_h)
-        .custom<smol::reflection::editor_prop_t>("Test Value");
-}
+struct mover_t
+{
+    float_t scale = 1.0f;
+};
+
+SMOL_REFLECT() { reflection::component<mover_t>(ctx, "Mover").field<&mover_t::scale>("Scale"); }
+
+void smol_game_register_types(smol::world_t* world) { smol::reflection::run_registrations(*world->reflection_ctx); }
+
+void smol_game_init(smol::world_t* world) {}
 
 void smol_game_update(smol::world_t* world)
 {
     ecs::registry_t& reg = world->registry;
 
-    vec3_t rot = {0.8f * (f32)time::get_time(), 0.7f * (f32)time::get_time(), 0.9f * (f32)time::get_time()};
+    vec3_t rot = {2.0f * (f32)time::get_time(), 0.7f * (f32)time::get_time(), 0.9f * (f32)time::get_time()};
     for (auto [entity, rotator, transform] : reg.view<rotator_t, transform_t>().each())
     {
         transform.local_rotation = quat_t::from_euler(rot);
@@ -70,6 +65,13 @@ void smol_game_update(smol::world_t* world)
     for (auto [entity, rotator, transform] : reg.view<scaler_t, transform_t>().each())
     {
         transform.local_scale = scale;
+        transform.is_dirty = true;
+    }
+
+    vec3_t pos = {2.0f * std::cos((f32)time::get_time()), 1.0f, 2.0f * std::cos((f32)time::get_time())};
+    for (auto [entity, mover, transform] : reg.view<mover_t, transform_t>().each())
+    {
+        transform.local_position = pos * mover.scale;
         transform.is_dirty = true;
     }
 }

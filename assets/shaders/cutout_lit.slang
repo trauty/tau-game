@@ -1,24 +1,36 @@
-import smol_globals;
+import smol_surface;
 import util;
-import lighting;
 
-[ShaderConfig("MainForwardPass", "Cutout", true, true, true)]
-struct CutoutLitShader
+// Tier 1 with a twist: triplanar sampling and an alpha cutoff, and still no lighting code. The
+// engine owns the entry points; this only has to answer "what is the surface here, and is there
+// one at all".
+[ShaderConfig("Surface", "Cutout", true, true, true)]
+struct CutoutLitShader : ISurfaceMaterial
 {
-    float4 color;
+    float4 base_color;
+
     uint albedo_tex;
     uint albedo_sampler;
-    float smoothness;
+
+    float roughness;
+    float metallic;
     float alpha_cutoff;
 
     property Texture albedo { get { return {albedo_tex, albedo_sampler}; } }
-};
 
-[RenderTargetsConfig]
-struct FragmentOut
-{
-    [RenderTarget("RGBA16_FLOAT")]
-    float4 color : SV_Target0;
+    bool surface(VertexOut input, out Surface out_surface, out float out_alpha)
+    {
+        float4 sampled =
+            sampleTriplanar(albedo.tex2d(), albedo.samplerState(), input.world_pos, input.normal, 10.0f) * base_color;
+
+        out_surface.albedo = sampled.rgb;
+        out_surface.normal = input.normal;
+        out_surface.roughness = roughness;
+        out_surface.metallic = metallic;
+        out_alpha = sampled.a;
+
+        return sampled.a >= alpha_cutoff;
+    }
 };
 
 [shader("vertex")]
@@ -27,24 +39,7 @@ VertexOut vertexMain(uint vertex_id: SV_VertexID, uint instance_id: SV_InstanceI
 { return defaultVertexTransform(vertex_id, instance_id, base_instance); }
 
 [shader("fragment")]
-FragmentOut fragmentMain(VertexOut in)
-{
-    ObjectData obj = getObjectData(in.draw_id);
-    CutoutLitShader mat = getMaterial<CutoutLitShader>(obj.material_offset);
+SurfaceOutput fragmentMain(VertexOut input) { return smolSurfaceFragment<CutoutLitShader>(input); }
 
-    float4 tex_color =
-        sampleTriplanar(mat.albedo.tex2d(), mat.albedo.samplerState(), in.world_pos, in.normal, 10.0f);
-    float4 base_color = tex_color * mat.color;
-
-    if (base_color.a < mat.alpha_cutoff) { discard; }
-
-    Surface surface;
-    surface.albedo = base_color.rgb;
-    surface.normal = normalize(in.normal);
-    surface.view_dir = normalize(globals.camera_pos.xyz - in.world_pos);
-    surface.smoothness = mat.smoothness;
-
-    float3 final_color = applyBlinnPhongLighting(surface, in.world_pos);
-
-    return FragmentOut(float4(final_color, base_color.a));
-}
+[shader("fragment")]
+GBufferOutput gbufferMain(VertexOut input) { return smolGBufferFragment<CutoutLitShader>(input); }

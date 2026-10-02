@@ -1,7 +1,13 @@
 {
-    "shader": "game://assets/shaders/transparent_alpha.smolshader",
+    "shader": "game://assets/shaders/transparent_alpha.slang",
     "properties": {
-        "color": [0.4, 0.8, 1.0, 0.2],
-        "smoothness": 32.0
+        "base_color": [
+            0.4,
+            0.8,
+            1.0,
+            0.2
+        ],
+        "roughness": 0.15,
+        "metallic": 0.0
     }
 }

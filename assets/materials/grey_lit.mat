@@ -1,7 +1,8 @@
 {
-    "shader": "game://assets/shaders/simple_lit.slang",
+    "shader": "engine://assets/shaders/pbr.slang",
     "properties": {
-        "color": [0.8, 0.8, 0.8, 0.8],
-        "smoothness": 16.0
+        "base_color": [0.8, 0.8, 0.8, 1.0],
+        "roughness": 0.4,
+        "metallic": 0.0
     }
 }

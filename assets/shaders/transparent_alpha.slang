@@ -1,22 +1,32 @@
-import smol_globals;
-import lighting;
+import smol_surface;
 
-[ShaderConfig("MainForwardPass", "TransparentAlpha", false, true, false)]
-struct TransparentAlphaShader
+// Transparent geometry stays in the forward pass, which is exactly why Tier 1 still works for it:
+// the material describes a surface, the engine lights it, and the blend mode decides which pass
+// it lands in. Nothing here names a pass.
+[ShaderConfig("Surface", "TransparentAlpha", false, true, false)]
+struct TransparentAlphaShader : ISurfaceMaterial
 {
-    float4 color;
+    float4 base_color;
+
     uint albedo_tex;
     uint albedo_sampler;
-    float smoothness;
+
+    float roughness;
+    float metallic;
 
     property Texture albedo { get { return {albedo_tex, albedo_sampler}; } }
-};
 
-[RenderTargetsConfig]
-struct FragmentOut
-{
-    [RenderTarget("RGBA16_FLOAT")]
-    float4 color : SV_Target0;
+    bool surface(VertexOut input, out Surface out_surface, out float out_alpha)
+    {
+        float4 sampled = albedo.sample(input.uv) * base_color;
+
+        out_surface.albedo = sampled.rgb;
+        out_surface.normal = input.normal;
+        out_surface.roughness = roughness;
+        out_surface.metallic = metallic;
+        out_alpha = sampled.a;
+        return true;
+    }
 };
 
 [shader("vertex")]
@@ -25,24 +35,4 @@ VertexOut vertexMain(uint vertex_id: SV_VertexID, uint instance_id: SV_InstanceI
 { return defaultVertexTransform(vertex_id, instance_id, base_instance); }
 
 [shader("fragment")]
-FragmentOut fragmentMain(VertexOut in)
-{
-    ObjectData obj = getObjectData(in.draw_id);
-
-    TransparentAlphaShader mat = getMaterial<TransparentAlphaShader>(obj.material_offset);
-
-    float4 base_color = mat.albedo.sample(in.uv) * mat.color;
-
-    Surface surface;
-    surface.albedo = base_color.rgb;
-    surface.normal = normalize(in.normal);
-    surface.view_dir = normalize(globals.camera_pos.xyz - in.world_pos);
-    surface.smoothness = mat.smoothness;
-
-    float3 final_color = applyBlinnPhongLighting(surface, in.world_pos);
-
-    FragmentOut out;
-    out.color = float4(final_color, base_color.a);
-    return out;
-}
-
+SurfaceOutput fragmentMain(VertexOut input) { return smolSurfaceFragment<TransparentAlphaShader>(input); }

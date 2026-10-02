@@ -1,5 +1,5 @@
 {
-    "shader": "game://assets/shaders/unlit.slang",
+    "shader": "engine://assets/shaders/unlit.slang",
     "textures": {
         "albedo_tex": "game://assets/textures/rock_albedo.png"
     },
@@ -7,6 +7,6 @@
         "albedo_sampler": 0
     },
     "properties": {
-        "color": [1.0, 1.0, 1.0, 1.0]
+        "base_color": [1.0, 1.0, 1.0, 1.0]
     }
 }

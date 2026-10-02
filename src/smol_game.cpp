@@ -27,28 +27,37 @@ using namespace smol;
 
 struct rotator_t
 {
-    i32_t test;
+    i32 test;
 };
 
 SMOL_REFLECT() { reflection::component<rotator_t>(ctx, "Rotator").field<&rotator_t::test>("Test Value"); }
 
 struct scaler_t
 {
-    i32_t test;
+    i32 test;
 };
 
 SMOL_REFLECT() { reflection::component<scaler_t>(ctx, "Scaler").field<&scaler_t::test>("Test Value"); }
 
 struct mover_t
 {
-    float_t scale = 1.0f;
+    f32 scale = 1.0f;
+
+    vec3_t first_rec_pos;
 };
 
 SMOL_REFLECT() { reflection::component<mover_t>(ctx, "Mover").field<&mover_t::scale>("Scale"); }
 
 void smol_game_register_types(smol::world_t* world) { smol::reflection::run_registrations(*world->reflection_ctx); }
 
-void smol_game_init(smol::world_t* world) {}
+void smol_game_init(smol::world_t* world)
+{
+    ecs::registry_t& reg = world->registry;
+    for (auto [entity, mover, transform] : reg.view<mover_t, transform_t>().each())
+    {
+        mover.first_rec_pos = transform.local_position;
+    }
+}
 
 void smol_game_update(smol::world_t* world)
 {
@@ -68,10 +77,14 @@ void smol_game_update(smol::world_t* world)
         transform.is_dirty = true;
     }
 
-    vec3_t pos = {2.0f * std::cos((f32)time::get_time()), 1.0f, 2.0f * std::cos((f32)time::get_time())};
     for (auto [entity, mover, transform] : reg.view<mover_t, transform_t>().each())
     {
-        transform.local_position = pos * mover.scale;
+        vec3_t pos = {
+            mover.first_rec_pos.x + std::cos((f32)time::get_time()) * mover.scale,
+            transform.local_position.y,
+            mover.first_rec_pos.z + std::cos((f32)time::get_time()) * mover.scale,
+        };
+        transform.local_position = pos;
         transform.is_dirty = true;
     }
 }

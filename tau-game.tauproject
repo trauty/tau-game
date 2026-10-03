@@ -1,12 +1,12 @@
 {
-    "project_name": "smol-game",
+    "project_name": "tau-game",
     "version": "0.0.1",
     "tauproject_version": "1",
     "engine": {
         "version": "0.1.0",
         "path": "tau-engine"
     },
-    "game_lib_name": "smol-game",
+    "game_lib_name": "tau-game",
     "startup_scene": "scenes/test.scene",
     "paths": {
         "bin_dir": "bin",

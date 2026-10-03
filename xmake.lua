@@ -1,4 +1,4 @@
-set_project("smol-game")
+set_project("tau-game")
 set_version("0.0.1")
 
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "."})
@@ -38,7 +38,7 @@ end
 
 includes(path.join(find_tau_engine(), "xmake", "tau.lua"))
 
-target("smol-game")
+target("tau-game")
     add_rules("tau.game", "tau.hotreload")
 
     add_files("src/**.cpp")

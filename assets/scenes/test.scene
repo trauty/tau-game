@@ -16,7 +16,7 @@
                         "v": {
                             "g": "df414337-b0b6-d2c5-a09c-78b405b448ba",
                             "p": "game://assets/materials/simple_lit.mat",
-                            "t": 1669580016775175434
+                            "t": "material"
                         }
                     },
                     "mesh": {
@@ -24,7 +24,7 @@
                         "v": {
                             "g": "ed48a8c1-9d59-b451-ae15-b5ddcc9f2214",
                             "p": "game://assets/models/monkee.glb",
-                            "t": 1606955420804674790
+                            "t": "mesh"
                         }
                     }
                 },
@@ -132,7 +132,7 @@
                         "v": {
                             "g": "df414337-b0b6-d2c5-a09c-78b405b448ba",
                             "p": "game://assets/materials/simple_lit.mat",
-                            "t": 1669580016775175434
+                            "t": "material"
                         }
                     },
                     "mesh": {
@@ -140,7 +140,7 @@
                         "v": {
                             "g": "264a19cb-6353-d62b-af89-0b8c467c8af5",
                             "p": "game://assets/models/plane.glb",
-                            "t": 1606955420804674790
+                            "t": "mesh"
                         }
                     }
                 },
@@ -204,7 +204,7 @@
                         "v": {
                             "g": "df414337-b0b6-d2c5-a09c-78b405b448ba",
                             "p": "game://assets/materials/simple_lit.mat",
-                            "t": 1669580016775175434
+                            "t": "material"
                         }
                     },
                     "mesh": {
@@ -212,7 +212,7 @@
                         "v": {
                             "g": "ed48a8c1-9d59-b451-ae15-b5ddcc9f2214",
                             "p": "game://assets/models/monkee.glb",
-                            "t": 1606955420804674790
+                            "t": "mesh"
                         }
                     }
                 },
@@ -303,7 +303,7 @@
                                     "p": "engine://assets/materials/chromatic_aberration.mat"
                                 }
                             ],
-                            "t": 1669580016775175434
+                            "t": "material"
                         }
                     },
                     "enabled": {
@@ -315,7 +315,7 @@
                         "v": {
                             "g": "634021bc-77f6-1712-9e81-9a38f9cc07bf",
                             "p": "engine://assets/materials/uberpost.mat",
-                            "t": 1669580016775175434
+                            "t": "material"
                         }
                     }
                 },

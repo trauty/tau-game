@@ -1,4 +1,4 @@
-import smol_surface;
+import tau_surface;
 
 // Transparent geometry stays in the forward pass, which is exactly why Tier 1 still works for it:
 // the material describes a surface, the engine lights it, and the blend mode decides which pass
@@ -35,4 +35,4 @@ VertexOut vertexMain(uint vertex_id: SV_VertexID, uint instance_id: SV_InstanceI
 { return defaultVertexTransform(vertex_id, instance_id, base_instance); }
 
 [shader("fragment")]
-SurfaceOutput fragmentMain(VertexOut input) { return smolSurfaceFragment<TransparentAlphaShader>(input); }
+SurfaceOutput fragmentMain(VertexOut input) { return tauSurfaceFragment<TransparentAlphaShader>(input); }

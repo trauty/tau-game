@@ -1,4 +1,4 @@
-import smol_surface;
+import tau_surface;
 import util;
 
 // Tier 1 with a twist: triplanar sampling and an alpha cutoff, and still no lighting code. The
@@ -39,7 +39,7 @@ VertexOut vertexMain(uint vertex_id: SV_VertexID, uint instance_id: SV_InstanceI
 { return defaultVertexTransform(vertex_id, instance_id, base_instance); }
 
 [shader("fragment")]
-SurfaceOutput fragmentMain(VertexOut input) { return smolSurfaceFragment<CutoutLitShader>(input); }
+SurfaceOutput fragmentMain(VertexOut input) { return tauSurfaceFragment<CutoutLitShader>(input); }
 
 [shader("fragment")]
-GBufferOutput gbufferMain(VertexOut input) { return smolGBufferFragment<CutoutLitShader>(input); }
+GBufferOutput gbufferMain(VertexOut input) { return tauGBufferFragment<CutoutLitShader>(input); }

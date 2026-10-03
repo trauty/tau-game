@@ -1,2 +1,2 @@
 # smol-game
-small game made with smol-engine
+small game made with tau-engine

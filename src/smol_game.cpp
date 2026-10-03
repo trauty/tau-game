@@ -1,43 +1,43 @@
-#include "smol/asset.h"
-#include "smol/asset_registry.h"
-#include "smol/asset_types.h"
-#include "smol/assets/material.h"
-#include "smol/assets/mesh.h"
-#include "smol/assets/shader.h"
-#include "smol/assets/texture.h"
-#include "smol/color.h"
-#include "smol/components/renderer.h"
-#include "smol/components/transform.h"
-#include "smol/ecs.h"
-#include "smol/engine.h"
-#include "smol/game.h"
-#include "smol/hash.h"
-#include "smol/log.h"
-#include "smol/math.h"
-#include "smol/reflection.h"
-#include "smol/rendering/renderer.h"
-#include "smol/rendering/rendergraph.h"
-#include "smol/time.h"
-#include "smol/world.h"
+#include "tau/asset.h"
+#include "tau/asset_registry.h"
+#include "tau/asset_types.h"
+#include "tau/assets/material.h"
+#include "tau/assets/mesh.h"
+#include "tau/assets/shader.h"
+#include "tau/assets/texture.h"
+#include "tau/color.h"
+#include "tau/components/renderer.h"
+#include "tau/components/transform.h"
+#include "tau/ecs.h"
+#include "tau/engine.h"
+#include "tau/game.h"
+#include "tau/hash.h"
+#include "tau/log.h"
+#include "tau/math.h"
+#include "tau/reflection.h"
+#include "tau/rendering/renderer.h"
+#include "tau/rendering/rendergraph.h"
+#include "tau/time.h"
+#include "tau/world.h"
 
 #include <cmath>
 #include <string>
 
-using namespace smol;
+using namespace tau;
 
 struct rotator_t
 {
     i32 test;
 };
 
-SMOL_REFLECT() { reflection::component<rotator_t>(ctx, "Rotator").field<&rotator_t::test>("Test Value"); }
+TAU_REFLECT() { reflection::component<rotator_t>(ctx, "Rotator").field<&rotator_t::test>("Test Value"); }
 
 struct scaler_t
 {
     i32 test;
 };
 
-SMOL_REFLECT() { reflection::component<scaler_t>(ctx, "Scaler").field<&scaler_t::test>("Test Value"); }
+TAU_REFLECT() { reflection::component<scaler_t>(ctx, "Scaler").field<&scaler_t::test>("Test Value"); }
 
 struct mover_t
 {
@@ -46,11 +46,11 @@ struct mover_t
     vec3_t first_rec_pos;
 };
 
-SMOL_REFLECT() { reflection::component<mover_t>(ctx, "Mover").field<&mover_t::scale>("Scale"); }
+TAU_REFLECT() { reflection::component<mover_t>(ctx, "Mover").field<&mover_t::scale>("Scale"); }
 
-void smol_game_register_types(smol::world_t* world) { smol::reflection::run_registrations(*world->reflection_ctx); }
+void tau_game_register_types(tau::world_t* world) { tau::reflection::run_registrations(*world->reflection_ctx); }
 
-void smol_game_init(smol::world_t* world)
+void tau_game_init(tau::world_t* world)
 {
     ecs::registry_t& reg = world->registry;
     for (auto [entity, mover, transform] : reg.view<mover_t, transform_t>().each())
@@ -59,7 +59,7 @@ void smol_game_init(smol::world_t* world)
     }
 }
 
-void smol_game_update(smol::world_t* world)
+void tau_game_update(tau::world_t* world)
 {
     ecs::registry_t& reg = world->registry;
 
@@ -89,6 +89,6 @@ void smol_game_update(smol::world_t* world)
     }
 }
 
-void smol_game_shutdown(smol::world_t* world) {}
+void tau_game_shutdown(tau::world_t* world) {}
 
-SMOL_GAME_ENTRY()
+TAU_GAME_ENTRY()

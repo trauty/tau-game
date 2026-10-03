@@ -4,8 +4,8 @@ build/
 .vscode/
 .xmake/
 compile_commands.json
-.smol/
+.tau/
 bin/
 imgui.ini
-smol-engine/
+tau-engine/
 dist/

@@ -3,40 +3,13 @@ set_version("0.0.1")
 
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "."})
 
-local function find_tau_engine()
-    local env = os.getenv("TAU_ENGINE_DIR")
-    if env and env ~= "" and os.isdir(env) then
-        return env
-    end
+-- the engine that configured this project, else the checkout beside it
+option("tau_engine_dir")
+    set_showmenu(true)
+    set_description("The tau engine this project builds against")
+option_end()
 
-    for _, cand in ipairs({
-        path.join(os.scriptdir(), "tau-engine"),
-        path.join(os.scriptdir(), "..", "tau-engine"),
-    }) do
-        if os.isdir(cand) then
-            return path.absolute(cand)
-        end
-    end
-
-    local home = os.getenv("HOME") or os.getenv("USERPROFILE")
-    if home then
-        local installed = os.dirs(path.join(home, ".tau", "engines", "*"))
-        if #installed > 0 then
-            table.sort(installed)
-            return installed[#installed]
-        end
-    end
-
-    print("")
-    print("  Could not find tau-engine")
-    print("")
-    print("  Point at it with TAU_ENGINE_DIR, vendor it at ./tau-engine, place it")
-    print("  beside this project as ../tau-engine, or install it under ~/.tau/engines/ on Linux")
-    print("")
-    tau_engine_was_not_found()
-end
-
-includes(path.join(find_tau_engine(), "xmake", "tau.lua"))
+includes(path.join(get_config("tau_engine_dir") or path.join(os.scriptdir(), "..", "tau-engine"), "xmake", "tau.lua"))
 
 target("tau-game")
     add_rules("tau.game", "tau.hotreload")

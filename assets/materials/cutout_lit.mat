@@ -1,4 +1,5 @@
 {
+    "guid": "9644f130-82bc-3e4e-818f-9a55281f3804",
     "shader": "game://assets/shaders/cutout_lit.slang",
     "textures": {
         "albedo_tex": "game://assets/textures/cutout_test.png"

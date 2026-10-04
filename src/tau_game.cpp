@@ -67,14 +67,12 @@ void tau_game_update(tau::world_t* world)
     for (auto [entity, rotator, transform] : reg.view<rotator_t, transform_t>().each())
     {
         transform.local_rotation = quat_t::from_euler(rot);
-        transform.is_dirty = true;
     }
 
     vec3_t scale = {2.0f * std::cos((f32)time::get_time()), 1.0f, 2.0f * std::cos((f32)time::get_time())};
     for (auto [entity, rotator, transform] : reg.view<scaler_t, transform_t>().each())
     {
         transform.local_scale = scale;
-        transform.is_dirty = true;
     }
 
     for (auto [entity, mover, transform] : reg.view<mover_t, transform_t>().each())
@@ -85,7 +83,6 @@ void tau_game_update(tau::world_t* world)
             mover.first_rec_pos.z + std::cos((f32)time::get_time()) * mover.scale,
         };
         transform.local_position = pos;
-        transform.is_dirty = true;
     }
 }
 

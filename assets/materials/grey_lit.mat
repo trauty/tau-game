@@ -1,4 +1,5 @@
 {
+    "guid": "1f4b2a21-cec7-24da-b0d5-ed93d9685f2e",
     "shader": "engine://assets/shaders/pbr.slang",
     "properties": {
         "base_color": [0.8, 0.8, 0.8, 1.0],

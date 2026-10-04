@@ -1,4 +1,5 @@
 {
+    "guid": "9c4e2cf1-f202-d2c2-9fda-17959e751315",
     "shader": "game://assets/shaders/transparent_alpha.slang",
     "properties": {
         "base_color": [
